@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	config "stock-challenge-go/pkg/config"
-	depInj "stock-challenge-go/pkg/dependency_injection"
+	depinject "stock-challenge-go/pkg/depinject"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 		log.Fatal("Error loading config: ", cErr)
 	}
 
-	server, depInjErr := depInj.InitializeAPI(config)
+	server, depInjErr := depinject.InitializeAPI(config)
 
 	if depInjErr != nil {
 		log.Fatal("Error initializing API: ", depInjErr)

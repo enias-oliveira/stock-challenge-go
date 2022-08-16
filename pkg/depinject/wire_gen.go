@@ -4,7 +4,7 @@
 //go:build !wireinject
 // +build !wireinject
 
-package dependency_injection
+package depinject
 
 import (
 	"stock-challenge-go/pkg/api"

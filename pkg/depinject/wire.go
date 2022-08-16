@@ -1,7 +1,7 @@
 //go:build wireinject
 // +build wireinject
 
-package dependency_injection
+package depinject
 
 import (
 	"github.com/google/wire"
