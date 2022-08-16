@@ -7,7 +7,7 @@ import (
 	"stock-challenge-go/pkg/domain"
 
 	repoInterface "stock-challenge-go/pkg/repository/interface"
-	servInterface "stock-challenge-go/pkg/service/interface"
+	srvcInterface "stock-challenge-go/pkg/service/interface"
 
 	"github.com/sethvargo/go-password/password"
 )
@@ -16,7 +16,7 @@ type AccountService struct {
 	accRepo repoInterface.AccountRepository
 }
 
-func NewAccountService(repo repoInterface.AccountRepository) servInterface.AccountService {
+func NewAccountService(repo repoInterface.AccountRepository) srvcInterface.AccountService {
 	return &AccountService{
 		accRepo: repo,
 	}

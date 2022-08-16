@@ -3,16 +3,16 @@ package handler
 import (
 	"net/http"
 	"stock-challenge-go/pkg/domain"
-	servcInterface "stock-challenge-go/pkg/service/interface"
+	srvcInterface "stock-challenge-go/pkg/service/interface"
 
 	"github.com/gin-gonic/gin"
 )
 
 type AccountHandler struct {
-	accountService servcInterface.AccountService
+	accountService srvcInterface.AccountService
 }
 
-func NewAccountHandler(accountService servcInterface.AccountService) *AccountHandler {
+func NewAccountHandler(accountService srvcInterface.AccountService) *AccountHandler {
 	return &AccountHandler{accountService: accountService}
 }
 
