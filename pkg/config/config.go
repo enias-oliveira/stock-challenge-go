@@ -11,10 +11,12 @@ type Config struct {
 	DBUser     string `mapstructure:"DB_USER"`
 	DBPort     string `mapstructure:"DB_PORT"`
 	DBPassword string `mapstructure:"DB_PASSWORD"`
+	APIHost    string `mapstructure:"API_HOST"`
+	APIPort    string `mapstructure:"API_PORT"`
 }
 
 var envs = []string{
-	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD",
+	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "API_HOST", "API_PORT",
 }
 
 func LoadConfig() (Config, error) {
