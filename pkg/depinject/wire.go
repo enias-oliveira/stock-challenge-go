@@ -6,9 +6,9 @@ package depinject
 import (
 	"github.com/google/wire"
 
-	http "stock-challenge-go/pkg/api"
 	config "stock-challenge-go/pkg/config"
 	db "stock-challenge-go/pkg/db"
+	http "stock-challenge-go/pkg/http"
 	repository "stock-challenge-go/pkg/repository"
 	service "stock-challenge-go/pkg/service"
 )

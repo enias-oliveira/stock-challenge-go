@@ -7,9 +7,9 @@
 package depinject
 
 import (
-	"stock-challenge-go/pkg/api"
 	"stock-challenge-go/pkg/config"
 	"stock-challenge-go/pkg/db"
+	"stock-challenge-go/pkg/http"
 	"stock-challenge-go/pkg/repository"
 	"stock-challenge-go/pkg/service"
 )
