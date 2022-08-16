@@ -10,6 +10,7 @@ import (
 	"stock-challenge-go/pkg/config"
 	"stock-challenge-go/pkg/db"
 	"stock-challenge-go/pkg/http"
+	"stock-challenge-go/pkg/http/handler"
 	"stock-challenge-go/pkg/repository"
 	"stock-challenge-go/pkg/service"
 )
@@ -23,6 +24,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	}
 	accountRepository := repository.NewAccountRepository(gormDB)
 	accountService := services.NewAccountService(accountRepository)
-	serverHTTP := http.NewServerHTTP(accountService)
+	accountHandler := handler.NewAccountHandler(accountService)
+	serverHTTP := http.NewServerHTTP(accountHandler)
 	return serverHTTP, nil
 }

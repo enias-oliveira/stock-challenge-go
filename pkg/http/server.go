@@ -1,10 +1,7 @@
 package http
 
 import (
-	"net/http"
-	"stock-challenge-go/pkg/domain"
-
-	servInterface "stock-challenge-go/pkg/service/interface"
+	"stock-challenge-go/pkg/http/handler"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +10,7 @@ type ServerHTTP struct {
 	engine *gin.Engine
 }
 
-func NewServerHTTP(accountService servInterface.AccountService) *ServerHTTP {
+func NewServerHTTP(accountHandler *handler.AccountHandler) *ServerHTTP {
 	engine := gin.New()
 
 	engine.Use(gin.Logger())
@@ -24,32 +21,7 @@ func NewServerHTTP(accountService servInterface.AccountService) *ServerHTTP {
 		})
 	})
 
-	engine.POST("/register", func(c *gin.Context) {
-		var account domain.Account
-
-		if err := c.ShouldBindJSON(&account); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
-			return
-		}
-
-		account, arErr := accountService.Register(c.Request.Context(), account)
-
-		if arErr != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": arErr.Error(),
-			})
-
-			return
-		}
-
-		c.JSON(200, gin.H{
-			"email":    account.Email,
-			"password": account.Password,
-		})
-	})
+	engine.POST("/register", accountHandler.Register)
 
 	return &ServerHTTP{engine: engine}
 }
