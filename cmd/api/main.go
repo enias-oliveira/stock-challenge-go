@@ -1,22 +1,23 @@
 package main
 
 import (
+	"crypto/sha256"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sethvargo/go-password/password"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
+type User struct {
+	gorm.Model
+	Email        string `gorm:"type:varchar(100);unique;uniqueIndex;"`
+	PasswordHash []byte `gorm:"type:binary(32);"`
+	Role         string `gorm:"type:enum('admin','user');default:'user'"`
+}
+
 func main() {
-	dsn := "root@/stock-challenge"
-
-	_, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-
-	if err != nil {
-		panic(err)
-	}
-
 	server := NewServerHTTP()
 	server.Run(":8080")
 }
@@ -31,6 +32,16 @@ type RegisterRequest struct {
 }
 
 func NewServerHTTP() *ServerHTTP {
+	dsn := "root@/stock-challenge"
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	db.AutoMigrate(&User{})
+
+	if err != nil {
+		panic(err)
+	}
+
 	engine := gin.New()
 
 	engine.Use(gin.Logger())
@@ -44,14 +55,34 @@ func NewServerHTTP() *ServerHTTP {
 	engine.POST("/register", func(c *gin.Context) {
 		var rq RegisterRequest
 
-		if err := c.ShouldBindJSON(&rq); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		if bErr := c.ShouldBindJSON(&rq); bErr != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": bErr.Error()})
+			return
+		}
+
+		newPassword, gpErr := password.Generate(32, 4, 4, false, false)
+		hashedPassword := sha256.Sum256([]byte(newPassword))
+
+		if gpErr != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": gpErr.Error()})
+			return
+		}
+
+		cuErr := db.Create(&User{
+			Model:        gorm.Model{},
+			Email:        rq.Email,
+			PasswordHash: hashedPassword[:],
+			Role:         rq.Role,
+		}).Error
+
+		if cuErr != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": cuErr.Error()})
 			return
 		}
 
 		c.JSON(200, gin.H{
 			"email":    rq.Email,
-			"password": "password",
+			"password": newPassword,
 		})
 	})
 
