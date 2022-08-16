@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,6 +15,11 @@ type ServerHTTP struct {
 	engine *gin.Engine
 }
 
+type RegisterRequest struct {
+	Email string `json:"email"`
+	Role  string `json:"role"`
+}
+
 func NewServerHTTP() *ServerHTTP {
 	engine := gin.New()
 
@@ -21,6 +28,20 @@ func NewServerHTTP() *ServerHTTP {
 	engine.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
+		})
+	})
+
+	engine.POST("/register", func(c *gin.Context) {
+		var rq RegisterRequest
+
+		if err := c.ShouldBindJSON(&rq); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"email":    rq.Email,
+			"password": "password",
 		})
 	})
 
