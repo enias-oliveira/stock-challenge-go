@@ -53,3 +53,6 @@ flycheck_*.el
 
 # Air Live reload
 /tmp
+
+# Temporary MySQL instance for Dev enviroment (created by nix)
+/mysql

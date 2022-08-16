@@ -4,9 +4,19 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func main() {
+	dsn := "root@/stock-challenge"
+
+	_, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	if err != nil {
+		panic(err)
+	}
+
 	server := NewServerHTTP()
 	server.Run(":8080")
 }
