@@ -9,11 +9,20 @@ package depinject
 import (
 	"stock-challenge-go/pkg/api"
 	"stock-challenge-go/pkg/config"
+	"stock-challenge-go/pkg/db"
+	"stock-challenge-go/pkg/repository"
+	"stock-challenge-go/pkg/service"
 )
 
 // Injectors from wire.go:
 
 func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
-	serverHTTP := http.NewServerHTTP()
+	gormDB, err := db.ConnectDatabase(cfg)
+	if err != nil {
+		return nil, err
+	}
+	accountRepository := repository.NewAccountRepository(gormDB)
+	accountService := services.NewAccountService(accountRepository)
+	serverHTTP := http.NewServerHTTP(accountService)
 	return serverHTTP, nil
 }

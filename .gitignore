@@ -56,3 +56,6 @@ flycheck_*.el
 
 # Temporary MySQL instance for Dev enviroment (created by nix)
 /mysql
+
+# Configuration variables
+.env

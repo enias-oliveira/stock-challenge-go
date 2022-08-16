@@ -1,18 +1,19 @@
 package http
 
 import (
+	"net/http"
 	"stock-challenge-go/pkg/domain"
 
-	"github.com/gin-gonic/gin"
+	servInterface "stock-challenge-go/pkg/service/interface"
 
-	services "stock-challenge-go/pkg/services"
+	"github.com/gin-gonic/gin"
 )
 
 type ServerHTTP struct {
 	engine *gin.Engine
 }
 
-func NewServerHTTP() *ServerHTTP {
+func NewServerHTTP(accountService servInterface.AccountService) *ServerHTTP {
 	engine := gin.New()
 
 	engine.Use(gin.Logger())
@@ -27,18 +28,18 @@ func NewServerHTTP() *ServerHTTP {
 		var account domain.Account
 
 		if err := c.ShouldBindJSON(&account); err != nil {
-			c.JSON(400, gin.H{
+			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
 
 			return
 		}
 
-		account, raErr := services.NewAccountService().Register(c.Request.Context(), account)
+		account, arErr := accountService.Register(c.Request.Context(), account)
 
-		if raErr != nil {
-			c.JSON(400, gin.H{
-				"error": raErr.Error(),
+		if arErr != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": arErr.Error(),
 			})
 
 			return

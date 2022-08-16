@@ -19,5 +19,6 @@ func main() {
 		log.Fatal("Error initializing API: ", depInjErr)
 	}
 
+	// TODO: Get port from config
 	server.Run(":8080")
 }
