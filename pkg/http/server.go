@@ -29,6 +29,11 @@ func NewServerHTTP(accountHandler *handler.AccountHandler, stockHandler *handler
 
 	api.GET("/profile", accountHandler.Profile)
 	api.GET("/stock", stockHandler.GetStock)
+	api.Use(middleware.RoleGuardMiddleware).GET("history", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "history",
+		})
+	})
 
 	return &ServerHTTP{engine: engine}
 }

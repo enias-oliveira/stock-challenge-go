@@ -36,3 +36,10 @@ func validateToken(accessToken string) (*jwt.Token, error) {
 
 	return token, err
 }
+
+func RoleGuardMiddleware(c *gin.Context) {
+	if c.MustGet("user").(*jwt.Token).Claims.(*handler.AccountClaims).Role != "admin" {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+}
