@@ -12,10 +12,8 @@ import (
 )
 
 func AuthorizationMiddleware(ctx *gin.Context) {
-	s := ctx.Request.Header.Get("Authorization")
-
-	accessToken := strings.TrimPrefix(s, "Bearer ")
-
+	authHeader := ctx.Request.Header.Get("Authorization")
+	accessToken := strings.TrimPrefix(authHeader, "Bearer ")
 	parsedToken, err := validateToken(accessToken)
 
 	if err != nil {
