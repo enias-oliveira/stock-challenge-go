@@ -1,39 +1,27 @@
 package repository
 
 import (
-	"io/ioutil"
-	"net/http"
+	"stock-challenge-go/pkg/client"
 	"stock-challenge-go/pkg/domain"
 	repoInterface "stock-challenge-go/pkg/repository/interface"
-
-	"github.com/gocarina/gocsv"
 )
 
 type stockRepository struct {
+	stooqClient *client.StooqClient
 }
 
-func NewStockRepository() repoInterface.StockRepository {
-	return &stockRepository{}
+func NewStockRepository(stooqClient *client.StooqClient) repoInterface.StockRepository {
+	return &stockRepository{
+		stooqClient: stooqClient,
+	}
 }
 
-func (s *stockRepository) GetStock(symbol string) (domain.Stock, error) {
-	requestURL := "https://stooq.com/q/l/?s=" + symbol + "&f=sd2t2ohlcvn&h&e=csv"
-
-	res, err := http.Get(requestURL)
-
-	if err != nil {
-		return domain.Stock{}, err
-	}
-
-	body, err := ioutil.ReadAll(res.Body)
-
-	if err != nil {
-		return domain.Stock{}, err
-	}
-
-	var stocks []domain.Stock
-
-	err = gocsv.UnmarshalBytes(body, &stocks)
-
-	return stocks[0], err
+func (sr *stockRepository) GetStock(symbol string) (domain.Stock, error) {
+	return sr.stooqClient.GetStock(client.StooqArgs{
+		Symbol: symbol,
+		// Challenge Defaults
+		F: sr.stooqClient.ApiKey,
+		E: "csv",
+		H: "1",
+	}.QueryParams())
 }

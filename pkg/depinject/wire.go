@@ -6,6 +6,7 @@ package depinject
 import (
 	"github.com/google/wire"
 
+	client "stock-challenge-go/pkg/client"
 	config "stock-challenge-go/pkg/config"
 	db "stock-challenge-go/pkg/db"
 	http "stock-challenge-go/pkg/http"
@@ -18,6 +19,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	wire.Build(db.ConnectDatabase,
 		repository.NewAccountRepository,
 		repository.NewStockRepository,
+		client.NewStooqClient,
 		service.NewAccountService,
 		service.NewStockService,
 		handler.NewAccountHandler,

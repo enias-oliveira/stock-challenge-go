@@ -6,17 +6,19 @@ import (
 )
 
 type Config struct {
-	DBHost     string `mapstructure:"DB_HOST"`
-	DBName     string `mapstructure:"DB_NAME"`
-	DBUser     string `mapstructure:"DB_USER"`
-	DBPort     string `mapstructure:"DB_PORT"`
-	DBPassword string `mapstructure:"DB_PASSWORD"`
-	APIHost    string `mapstructure:"API_HOST"`
-	APIPort    string `mapstructure:"API_PORT"`
+	DBHost      string `mapstructure:"DB_HOST"`
+	DBName      string `mapstructure:"DB_NAME"`
+	DBUser      string `mapstructure:"DB_USER"`
+	DBPort      string `mapstructure:"DB_PORT"`
+	DBPassword  string `mapstructure:"DB_PASSWORD"`
+	APIHost     string `mapstructure:"API_HOST"`
+	APIPort     string `mapstructure:"API_PORT"`
+	StooqAPIKey string `mapstructure:"STOOQ_API_KEY"`
 }
 
 var envs = []string{
-	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "API_HOST", "API_PORT",
+	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD",
+	"API_HOST", "API_PORT", "STOOQ_API_KEY",
 }
 
 // TODO: Read from enviroment variables. (Currently only reading from .env file)

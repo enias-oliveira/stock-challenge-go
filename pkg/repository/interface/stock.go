@@ -5,5 +5,5 @@ import (
 )
 
 type StockRepository interface {
-	GetStock(symbol string) (domain.Stock, error)
+	GetStock(queryParams string) (domain.Stock, error)
 }

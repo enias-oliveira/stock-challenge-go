@@ -7,6 +7,7 @@
 package depinject
 
 import (
+	"stock-challenge-go/pkg/client"
 	"stock-challenge-go/pkg/config"
 	"stock-challenge-go/pkg/db"
 	"stock-challenge-go/pkg/http"
@@ -25,7 +26,8 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	accountRepository := repository.NewAccountRepository(gormDB)
 	accountService := services.NewAccountService(accountRepository)
 	accountHandler := handler.NewAccountHandler(accountService)
-	stockRepository := repository.NewStockRepository()
+	stooqClient := client.NewStooqClient(cfg)
+	stockRepository := repository.NewStockRepository(stooqClient)
 	stockService := services.NewStockService(stockRepository)
 	stockHandler := handler.NewStockHandler(stockService)
 	serverHTTP := http.NewServerHTTP(accountHandler, stockHandler)
