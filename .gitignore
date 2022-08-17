@@ -52,7 +52,7 @@ flycheck_*.el
 /network-security.data
 
 # Air Live reload
-/tmp
+**/tmp
 
 # Temporary MySQL instance for Dev enviroment (created by nix)
 /mysql
