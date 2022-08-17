@@ -6,6 +6,16 @@ import (
 	depinject "stock-challenge-go/pkg/depinject"
 )
 
+// @title           Swagger Example API
+// @version         1.0
+// @description     The GO implementation of the Stooq Stock API challenge.
+
+// @host      localhost:8080
+// @BasePath  /
+
+// @securityDefinitions.apikey Bearer
+// @in header
+// @name Authorization
 func main() {
 	config, cErr := config.LoadConfig()
 

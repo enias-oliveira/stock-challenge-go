@@ -29,17 +29,24 @@ func NewAccountHandler(accountService srvcInterface.AccountService, cfg config.C
 	return &AccountHandler{accountService, cfg}
 }
 
-// @BasePath /api/v1
+type RegisterRequest struct {
+	Email string `json:"email"`
+	Role  string `json:"role"`
+}
 
-// PingExample godoc
-// @Summary ping example
-// @Schemes
-// @Description do ping
-// @Tags example
-// @Accept json
-// @Produce json
-// @Success 200 {string} Helloworld
-// @Router /example/helloworld [get]
+type RegisterResponse struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// @Summary      Create new account
+// @Description  Generate account and password
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Param 	     body body RegisterRequest true "Create new account"
+// @Success      200  {object}  RegisterResponse
+// @Router       /register [post]
 func (ah *AccountHandler) Register(ctx *gin.Context) {
 	var account domain.Account
 
@@ -67,6 +74,23 @@ func (ah *AccountHandler) Register(ctx *gin.Context) {
 	})
 }
 
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginResponse struct {
+	AccessToken string `json:"access_token"`
+}
+
+// @Summary      Login Account
+// @Description  Generate access tokenq
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Param 	     body body LoginRequest true "Login account"
+// @Success      200  {object}  LoginResponse
+// @Router       /login [post]
 func (ah *AccountHandler) Login(ctx *gin.Context) {
 	var account domain.Account
 
@@ -109,6 +133,19 @@ func (ah *AccountHandler) Login(ctx *gin.Context) {
 	})
 }
 
+type ProfileResponse struct {
+	ID    int    `json:"id"`
+	Email string `json:"email"`
+	Role  string `json:"role"`
+}
+
+// @Summary      Get Account Info
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  ProfileResponse
+// @Router       /api/profile [get]
+// @Security     Bearer
 func (ah *AccountHandler) Profile(ctx *gin.Context) {
 	user, userExists := ctx.Get("user")
 

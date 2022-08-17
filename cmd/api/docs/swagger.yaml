@@ -1,4 +1,110 @@
+basePath: /
+definitions:
+  handler.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  handler.LoginResponse:
+    properties:
+      access_token:
+        type: string
+    type: object
+  handler.ProfileResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      role:
+        type: string
+    type: object
+  handler.RegisterRequest:
+    properties:
+      email:
+        type: string
+      role:
+        type: string
+    type: object
+  handler.RegisterResponse:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+host: localhost:8080
 info:
   contact: {}
-paths: {}
+  description: The GO implementation of the Stooq Stock API challenge.
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /api/profile:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ProfileResponse'
+      security:
+      - Bearer: []
+      summary: Get Account Info
+      tags:
+      - accounts
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Generate access tokenq
+      parameters:
+      - description: Login account
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.LoginResponse'
+      summary: Login Account
+      tags:
+      - accounts
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Generate account and password
+      parameters:
+      - description: Create new account
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.RegisterResponse'
+      summary: Create new account
+      tags:
+      - accounts
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
