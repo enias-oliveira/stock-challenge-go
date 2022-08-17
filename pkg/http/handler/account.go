@@ -39,7 +39,7 @@ func (ah *AccountHandler) Register(c *gin.Context) {
 		return
 	}
 
-	account, arErr := ah.accountService.Register(c.Request.Context(), account)
+	account, arErr := ah.accountService.Register(account)
 
 	if arErr != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

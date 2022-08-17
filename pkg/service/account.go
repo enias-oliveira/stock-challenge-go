@@ -24,7 +24,7 @@ func NewAccountService(repo repoInterface.AccountRepository) srvcInterface.Accou
 	}
 }
 
-func (as *AccountService) Register(ctx context.Context, account domain.Account) (domain.Account, error) {
+func (as *AccountService) Register(account domain.Account) (domain.Account, error) {
 	newPassword, gpErr := password.Generate(32, 4, 4, false, false)
 
 	account.Password = newPassword
@@ -36,7 +36,7 @@ func (as *AccountService) Register(ctx context.Context, account domain.Account) 
 	hashedPassword := sha256.Sum256([]byte(newPassword))
 	account.PasswordHash = hashedPassword[:]
 
-	account, cuErr := as.accRepo.Save(ctx, account)
+	account, cuErr := as.accRepo.Save(account)
 
 	if cuErr != nil {
 		return account, cuErr
