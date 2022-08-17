@@ -19,6 +19,7 @@ var envs = []string{
 	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "API_HOST", "API_PORT",
 }
 
+// TODO: Read from enviroment variables. (Currently only reading from .env file)
 func LoadConfig() (Config, error) {
 	var config Config
 
