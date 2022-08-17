@@ -17,8 +17,8 @@ func NewServerHTTP(accountHandler *handler.AccountHandler, stockHandler *handler
 
 	engine.Use(gin.Logger())
 
-	engine.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
+	engine.GET("/ping", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})

@@ -18,12 +18,12 @@ func NewStockHandler(stockService srvcInterface.StockService) *StockHandler {
 	}
 }
 
-func (h *StockHandler) GetStock(c *gin.Context) {
-	symbol := c.Query("q")
-	user, userExists := c.Get("user")
+func (h *StockHandler) GetStock(ctx *gin.Context) {
+	symbol := ctx.Query("q")
+	user, userExists := ctx.Get("user")
 
 	if !userExists {
-		c.JSON(500, gin.H{
+		ctx.JSON(500, gin.H{
 			"message": "error",
 		})
 		return
@@ -33,7 +33,7 @@ func (h *StockHandler) GetStock(c *gin.Context) {
 	id, err := strconv.Atoi(claims.Subject)
 
 	if err != nil {
-		c.JSON(500, gin.H{
+		ctx.JSON(500, gin.H{
 			"message": "error",
 		})
 		return
@@ -42,13 +42,13 @@ func (h *StockHandler) GetStock(c *gin.Context) {
 	stock, err := h.stockService.GetStock(id, symbol)
 
 	if err != nil {
-		c.JSON(500, gin.H{
+		ctx.JSON(500, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, gin.H{
+	ctx.JSON(200, gin.H{
 		"date":   stock.CreatedAt.UTC(),
 		"name":   stock.Name,
 		"symbol": stock.Symbol,

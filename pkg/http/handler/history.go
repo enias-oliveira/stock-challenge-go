@@ -26,11 +26,11 @@ func NewHistoryHandler(historyService srvcInterface.HistoryService) *HistoryHand
 	return &HistoryHandler{historyService: historyService}
 }
 
-func (hh *HistoryHandler) GetHistory(c *gin.Context) {
-	user, userExists := c.Get("user")
+func (hh *HistoryHandler) GetHistory(ctx *gin.Context) {
+	user, userExists := ctx.Get("user")
 
 	if !userExists {
-		c.JSON(500, gin.H{
+		ctx.JSON(500, gin.H{
 			"message": "error",
 		})
 	}
@@ -40,7 +40,7 @@ func (hh *HistoryHandler) GetHistory(c *gin.Context) {
 	id, scErr := strconv.Atoi(claims.Subject)
 
 	if scErr != nil {
-		c.JSON(500, gin.H{
+		ctx.JSON(500, gin.H{
 			"message": "error",
 		})
 	}
@@ -62,22 +62,22 @@ func (hh *HistoryHandler) GetHistory(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(500, gin.H{
+		ctx.JSON(500, gin.H{
 			"message": "error",
 		})
 	}
 
-	c.JSON(200, stockHistoryResponse)
+	ctx.JSON(200, stockHistoryResponse)
 }
 
-func (hh *HistoryHandler) GetStat(c *gin.Context) {
+func (hh *HistoryHandler) GetStat(ctx *gin.Context) {
 	mostRequestedStock, err := hh.historyService.FindMostRquestedStock()
 
 	if err != nil {
-		c.JSON(500, gin.H{
+		ctx.JSON(500, gin.H{
 			"message": "error",
 		})
 	}
 
-	c.JSON(200, mostRequestedStock)
+	ctx.JSON(200, mostRequestedStock)
 }

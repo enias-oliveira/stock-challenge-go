@@ -11,19 +11,19 @@ import (
 	"github.com/spf13/viper"
 )
 
-func AuthorizationMiddleware(c *gin.Context) {
-	s := c.Request.Header.Get("Authorization")
+func AuthorizationMiddleware(ctx *gin.Context) {
+	s := ctx.Request.Header.Get("Authorization")
 
 	accessToken := strings.TrimPrefix(s, "Bearer ")
 
 	parsedToken, err := validateToken(accessToken)
 
 	if err != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
-	c.Set("user", parsedToken)
+	ctx.Set("user", parsedToken)
 }
 
 func validateToken(accessToken string) (*jwt.Token, error) {
@@ -38,9 +38,9 @@ func validateToken(accessToken string) (*jwt.Token, error) {
 	return token, err
 }
 
-func RoleGuardMiddleware(c *gin.Context) {
-	if c.MustGet("user").(*jwt.Token).Claims.(*handler.AccountClaims).Role != "admin" {
-		c.AbortWithStatus(http.StatusForbidden)
+func RoleGuardMiddleware(ctx *gin.Context) {
+	if ctx.MustGet("user").(*jwt.Token).Claims.(*handler.AccountClaims).Role != "admin" {
+		ctx.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 }

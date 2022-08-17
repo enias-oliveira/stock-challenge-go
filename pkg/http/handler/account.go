@@ -29,11 +29,11 @@ func NewAccountHandler(accountService srvcInterface.AccountService, cfg config.C
 	return &AccountHandler{accountService, cfg}
 }
 
-func (ah *AccountHandler) Register(c *gin.Context) {
+func (ah *AccountHandler) Register(ctx *gin.Context) {
 	var account domain.Account
 
-	if err := c.ShouldBindJSON(&account); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+	if err := ctx.ShouldBindJSON(&account); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 
@@ -43,24 +43,24 @@ func (ah *AccountHandler) Register(c *gin.Context) {
 	account, arErr := ah.accountService.Register(account)
 
 	if arErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": arErr.Error(),
 		})
 
 		return
 	}
 
-	c.JSON(200, gin.H{
+	ctx.JSON(200, gin.H{
 		"email":    account.Email,
 		"password": account.Password,
 	})
 }
 
-func (ah *AccountHandler) Login(c *gin.Context) {
+func (ah *AccountHandler) Login(ctx *gin.Context) {
 	var account domain.Account
 
-	if bjErr := c.ShouldBindJSON(&account); bjErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+	if bjErr := ctx.ShouldBindJSON(&account); bjErr != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": bjErr.Error(),
 		})
 
@@ -70,7 +70,7 @@ func (ah *AccountHandler) Login(c *gin.Context) {
 	validAcc, vaErr := ah.accountService.ValidateAccount(account)
 
 	if vaErr != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
@@ -88,21 +88,21 @@ func (ah *AccountHandler) Login(c *gin.Context) {
 	tokenString, tsErr := token.SignedString([]byte(ah.cfg.JWTSecret))
 
 	if tsErr != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error": tsErr.Error(),
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"access_token": tokenString,
 	})
 }
 
-func (ah *AccountHandler) Profile(c *gin.Context) {
-	user, userExists := c.Get("user")
+func (ah *AccountHandler) Profile(ctx *gin.Context) {
+	user, userExists := ctx.Get("user")
 
 	if !userExists {
-		c.JSON(500, gin.H{
+		ctx.JSON(500, gin.H{
 			"message": "error",
 		})
 		return
@@ -113,13 +113,13 @@ func (ah *AccountHandler) Profile(c *gin.Context) {
 	id, err := strconv.Atoi(claims.Subject)
 
 	if err != nil {
-		c.JSON(500, gin.H{
+		ctx.JSON(500, gin.H{
 			"message": "error",
 		})
 		return
 	}
 
-	c.JSON(200, gin.H{
+	ctx.JSON(200, gin.H{
 		"id":    id,
 		"email": claims.Email,
 		"role":  claims.Role,
