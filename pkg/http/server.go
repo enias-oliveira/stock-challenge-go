@@ -12,6 +12,7 @@ type ServerHTTP struct {
 }
 
 func NewServerHTTP(accountHandler *handler.AccountHandler, stockHandler *handler.StockHandler, historyHandler *handler.HistoryHandler) *ServerHTTP {
+	// TODO: add swagger documentation
 	engine := gin.New()
 
 	engine.Use(gin.Logger())
@@ -29,7 +30,9 @@ func NewServerHTTP(accountHandler *handler.AccountHandler, stockHandler *handler
 
 	api.GET("/profile", accountHandler.Profile)
 	api.GET("/stock", stockHandler.GetStock)
-	api.GET("history", historyHandler.GetHistory)
+	api.GET("/history", historyHandler.GetHistory)
+
+	api.Use(middleware.RoleGuardMiddleware).GET("/stat", historyHandler.GetStat)
 
 	return &ServerHTTP{engine: engine}
 }

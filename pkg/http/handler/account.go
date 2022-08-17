@@ -84,6 +84,7 @@ func (ah *AccountHandler) Login(c *gin.Context) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
+	// TODO: move secret to env variable
 	tokenString, tsErr := token.SignedString([]byte("secret"))
 
 	if tsErr != nil {

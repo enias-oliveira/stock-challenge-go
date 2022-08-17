@@ -69,3 +69,15 @@ func (hh *HistoryHandler) GetHistory(c *gin.Context) {
 
 	c.JSON(200, stockHistoryResponse)
 }
+
+func (hh *HistoryHandler) GetStat(c *gin.Context) {
+	mostRequestedStock, err := hh.historyService.FindMostRquestedStock()
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "error",
+		})
+	}
+
+	c.JSON(200, mostRequestedStock)
+}
