@@ -66,7 +66,7 @@ func (ah *AccountHandler) Login(c *gin.Context) {
 		return
 	}
 
-	validAcc, vaErr := ah.accountService.ValidateAccount(c.Request.Context(), account)
+	validAcc, vaErr := ah.accountService.ValidateAccount(account)
 
 	if vaErr != nil {
 		c.AbortWithStatus(http.StatusUnauthorized)

@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"context"
-
 	"gorm.io/gorm"
 
 	"stock-challenge-go/pkg/domain"
@@ -23,7 +21,7 @@ func (ar *accountRepository) Save(account domain.Account) (domain.Account, error
 	return account, err
 }
 
-func (ar *accountRepository) FindByEmail(ctx context.Context, email string) (domain.Account, error) {
+func (ar *accountRepository) FindByEmail(email string) (domain.Account, error) {
 	account := domain.Account{
 		Email: email,
 	}

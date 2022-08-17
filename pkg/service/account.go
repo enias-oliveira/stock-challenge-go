@@ -1,7 +1,6 @@
 package services
 
 import (
-	"context"
 	"crypto/sha256"
 	"errors"
 	"reflect"
@@ -45,8 +44,8 @@ func (as *AccountService) Register(account domain.Account) (domain.Account, erro
 	return account, nil
 }
 
-func (as *AccountService) ValidateAccount(ctx context.Context, unvalAccount domain.Account) (domain.Account, error) {
-	accFound, err := as.accRepo.FindByEmail(ctx, unvalAccount.Email)
+func (as *AccountService) ValidateAccount(unvalAccount domain.Account) (domain.Account, error) {
+	accFound, err := as.accRepo.FindByEmail(unvalAccount.Email)
 
 	if err != nil {
 		return accFound, errors.New("Invalid username or password")

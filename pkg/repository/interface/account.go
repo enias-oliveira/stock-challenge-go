@@ -1,11 +1,10 @@
 package interfaces
 
 import (
-	"context"
 	"stock-challenge-go/pkg/domain"
 )
 
 type AccountRepository interface {
-	Save(account domain.Account) (domain.Account, error)
-	FindByEmail(ctx context.Context, email string) (domain.Account, error)
+	Save(domain.Account) (domain.Account, error)
+	FindByEmail(string) (domain.Account, error)
 }
