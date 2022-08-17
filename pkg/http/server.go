@@ -11,7 +11,7 @@ type ServerHTTP struct {
 	engine *gin.Engine
 }
 
-func NewServerHTTP(accountHandler *handler.AccountHandler, stockHandler *handler.StockHandler) *ServerHTTP {
+func NewServerHTTP(accountHandler *handler.AccountHandler, stockHandler *handler.StockHandler, historyHandler *handler.HistoryHandler) *ServerHTTP {
 	engine := gin.New()
 
 	engine.Use(gin.Logger())
@@ -29,11 +29,7 @@ func NewServerHTTP(accountHandler *handler.AccountHandler, stockHandler *handler
 
 	api.GET("/profile", accountHandler.Profile)
 	api.GET("/stock", stockHandler.GetStock)
-	api.Use(middleware.RoleGuardMiddleware).GET("history", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "history",
-		})
-	})
+	api.Use(middleware.RoleGuardMiddleware).GET("history", historyHandler.GetHistory)
 
 	return &ServerHTTP{engine: engine}
 }

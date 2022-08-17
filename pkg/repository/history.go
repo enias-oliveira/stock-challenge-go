@@ -21,3 +21,10 @@ func (hr *historyRepository) Save(sqReq domain.StockQuoteRequest) (domain.StockQ
 
 	return sqReq, err
 }
+
+func (hr *historyRepository) FindByUserID(userID int) ([]domain.StockQuoteRequest, error) {
+	var sqReq []domain.StockQuoteRequest
+	err := hr.db.Where(&domain.StockQuoteRequest{UserID: userID}, "UserID").Find(&sqReq).Error
+
+	return sqReq, err
+}

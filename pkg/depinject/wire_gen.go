@@ -32,6 +32,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	historyService := services.NewHistoryService(historyRepository)
 	stockService := services.NewStockService(stockRepository, historyService)
 	stockHandler := handler.NewStockHandler(stockService)
-	serverHTTP := http.NewServerHTTP(accountHandler, stockHandler)
+	historyHandler := handler.NewHistoryHandler(historyService)
+	serverHTTP := http.NewServerHTTP(accountHandler, stockHandler, historyHandler)
 	return serverHTTP, nil
 }

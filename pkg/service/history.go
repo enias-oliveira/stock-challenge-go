@@ -20,3 +20,7 @@ func (hs *HistoryService) SaveStockQuoteRequest(sqRequest domain.StockQuoteReque
 
 	return savedRequest, err
 }
+
+func (hs *HistoryService) FindAccountStockHistory(userID int) ([]domain.StockQuoteRequest, error) {
+	return hs.repo.FindByUserID(userID)
+}

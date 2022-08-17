@@ -26,6 +26,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		service.NewHistoryService,
 		handler.NewAccountHandler,
 		handler.NewStockHandler,
+		handler.NewHistoryHandler,
 		http.NewServerHTTP)
 
 	return &http.ServerHTTP{}, nil
