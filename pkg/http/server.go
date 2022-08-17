@@ -1,10 +1,15 @@
 package http
 
 import (
+	"github.com/gin-gonic/gin"
+
+	_ "stock-challenge-go/cmd/api/docs"
+
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"stock-challenge-go/pkg/http/handler"
 	"stock-challenge-go/pkg/http/middleware"
-
-	"github.com/gin-gonic/gin"
 )
 
 type ServerHTTP struct {
@@ -12,10 +17,11 @@ type ServerHTTP struct {
 }
 
 func NewServerHTTP(accountHandler *handler.AccountHandler, stockHandler *handler.StockHandler, historyHandler *handler.HistoryHandler) *ServerHTTP {
-	// TODO: add swagger documentation
 	engine := gin.New()
 
 	engine.Use(gin.Logger())
+
+	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	engine.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{

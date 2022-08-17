@@ -29,6 +29,17 @@ func NewAccountHandler(accountService srvcInterface.AccountService, cfg config.C
 	return &AccountHandler{accountService, cfg}
 }
 
+// @BasePath /api/v1
+
+// PingExample godoc
+// @Summary ping example
+// @Schemes
+// @Description do ping
+// @Tags example
+// @Accept json
+// @Produce json
+// @Success 200 {string} Helloworld
+// @Router /example/helloworld [get]
 func (ah *AccountHandler) Register(ctx *gin.Context) {
 	var account domain.Account
 
