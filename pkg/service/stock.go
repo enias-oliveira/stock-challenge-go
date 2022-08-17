@@ -19,7 +19,7 @@ func NewStockService(repo repoInterface.StockRepository, hsService srvcInterface
 	}
 }
 
-func (ss *StockService) GetStock(symbol string) (domain.StockQuoteRequest, error) {
+func (ss *StockService) GetStock(userId int, symbol string) (domain.StockQuoteRequest, error) {
 	stock, err := ss.stockRepo.GetStock(symbol)
 
 	if err != nil {
@@ -27,7 +27,7 @@ func (ss *StockService) GetStock(symbol string) (domain.StockQuoteRequest, error
 	}
 
 	sqReq, err := ss.HistoryService.SaveStockQuoteRequest(domain.StockQuoteRequest{
-		UserID: 1,
+		UserID: userId,
 		Name:   stock.Name,
 		Symbol: stock.Symbol,
 		Open:   stock.Open,

@@ -2,21 +2,21 @@ package services
 
 import (
 	"stock-challenge-go/pkg/domain"
-	srvcInterface "stock-challenge-go/pkg/service/interface"
 
-	"gorm.io/gorm"
+	repoInterface "stock-challenge-go/pkg/repository/interface"
+	srvcInterface "stock-challenge-go/pkg/service/interface"
 )
 
 type HistoryService struct {
-	db *gorm.DB
+	repo repoInterface.HistoryRepository
 }
 
-func NewHistoryService(db *gorm.DB) srvcInterface.HistoryService {
-	return &HistoryService{db}
+func NewHistoryService(repo repoInterface.HistoryRepository) srvcInterface.HistoryService {
+	return &HistoryService{repo}
 }
 
 func (hs *HistoryService) SaveStockQuoteRequest(sqRequest domain.StockQuoteRequest) (domain.StockQuoteRequest, error) {
-	err := hs.db.Create(&sqRequest).Error
+	savedRequest, err := hs.repo.Save(sqRequest)
 
-	return sqRequest, err
+	return savedRequest, err
 }

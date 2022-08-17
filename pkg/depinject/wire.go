@@ -19,6 +19,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	wire.Build(db.ConnectDatabase,
 		repository.NewAccountRepository,
 		repository.NewStockRepository,
+		repository.NewHistoryRepository,
 		client.NewStooqClient,
 		service.NewAccountService,
 		service.NewStockService,

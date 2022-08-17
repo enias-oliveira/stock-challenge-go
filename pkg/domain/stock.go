@@ -2,6 +2,7 @@ package domain
 
 import "gorm.io/gorm"
 
+// TODO: Remove from domain
 type Stock struct {
 	Symbol string  `csv:"Symbol"`
 	Date   string  `csv:"Date"`

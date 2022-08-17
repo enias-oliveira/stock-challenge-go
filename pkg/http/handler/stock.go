@@ -1,8 +1,11 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
 	srvcInterface "stock-challenge-go/pkg/service/interface"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	jwt "github.com/golang-jwt/jwt/v4"
 )
 
 type StockHandler struct {
@@ -17,8 +20,26 @@ func NewStockHandler(stockService srvcInterface.StockService) *StockHandler {
 
 func (h *StockHandler) GetStock(c *gin.Context) {
 	symbol := c.Query("q")
+	user, userExists := c.Get("user")
 
-	stock, err := h.stockService.GetStock(symbol)
+	if !userExists {
+		c.JSON(500, gin.H{
+			"message": "error",
+		})
+		return
+	}
+
+	claims := user.(*jwt.Token).Claims.(*AccountClaims)
+	id, err := strconv.Atoi(claims.Subject)
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "error",
+		})
+		return
+	}
+
+	stock, err := h.stockService.GetStock(id, symbol)
 
 	if err != nil {
 		c.JSON(500, gin.H{
