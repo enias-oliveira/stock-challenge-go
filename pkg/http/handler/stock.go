@@ -16,9 +16,9 @@ func NewStockHandler(stockService srvcInterface.StockService) *StockHandler {
 }
 
 func (h *StockHandler) GetStock(c *gin.Context) {
-	quote := c.Query("q")
+	symbol := c.Query("q")
 
-	stock, err := h.stockService.GetStock(quote)
+	stock, err := h.stockService.GetStock(symbol)
 
 	if err != nil {
 		c.JSON(500, gin.H{

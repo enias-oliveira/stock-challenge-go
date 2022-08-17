@@ -1,9 +1,9 @@
 package interfaces
 
 import (
-	domain "stock-challenge-go/pkg/domain"
+	"stock-challenge-go/pkg/domain"
 )
 
-type StockService interface {
+type StockRepository interface {
 	GetStock(symbol string) (domain.Stock, error)
 }
