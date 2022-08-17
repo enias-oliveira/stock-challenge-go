@@ -2,7 +2,6 @@ package repository
 
 import (
 	"stock-challenge-go/pkg/client"
-	"stock-challenge-go/pkg/domain"
 	repoInterface "stock-challenge-go/pkg/repository/interface"
 )
 
@@ -16,7 +15,7 @@ func NewStockRepository(stooqClient *client.StooqClient) repoInterface.StockRepo
 	}
 }
 
-func (sr *stockRepository) GetStock(symbol string) (domain.Stock, error) {
+func (sr *stockRepository) GetStock(symbol string) (client.StooqStock, error) {
 	return sr.stooqClient.GetStock(client.StooqArgs{
 		Symbol: symbol,
 		// Challenge Defaults

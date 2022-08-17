@@ -7,15 +7,21 @@ import (
 	"net/http"
 	"net/url"
 	"stock-challenge-go/pkg/config"
-	"stock-challenge-go/pkg/domain"
 	"time"
 
 	"github.com/gocarina/gocsv"
 )
 
-var baseURL = url.URL{
-	Scheme: "https",
-	Host:   "stooq.com",
+type StooqStock struct {
+	Symbol string  `csv:"Symbol"`
+	Date   string  `csv:"Date"`
+	Time   string  `csv:"Time"`
+	Open   float32 `csv:"Open"`
+	High   float32 `csv:"High"`
+	Low    float32 `csv:"Low"`
+	Close  float32 `csv:"Close"`
+	Volume int     `csv:"Volume"`
+	Name   string  `csv:"Name"`
 }
 
 type StooqClient struct {
@@ -43,6 +49,11 @@ type ErrorResponse struct {
 	Message    string `json:"message"`
 }
 
+var baseURL = url.URL{
+	Scheme: "https",
+	Host:   "stooq.com",
+}
+
 func NewStooqClient(cfg config.Config) *StooqClient {
 	return &StooqClient{
 		httpClient: &http.Client{
@@ -52,19 +63,19 @@ func NewStooqClient(cfg config.Config) *StooqClient {
 	}
 }
 
-func (cl *StooqClient) GetStock(queryParams url.Values) (domain.Stock, error) {
+func (cl *StooqClient) GetStock(queryParams url.Values) (StooqStock, error) {
 	endpt := baseURL.ResolveReference(&url.URL{Path: "/q/l/"})
 	req, err := http.NewRequest("GET", endpt.String(), nil)
 
 	if err != nil {
-		return domain.Stock{}, err
+		return StooqStock{}, err
 	}
 
 	req.URL.RawQuery = queryParams.Encode()
 	res, err := cl.httpClient.Do(req)
 
 	if err != nil {
-		return domain.Stock{}, err
+		return StooqStock{}, err
 	}
 
 	defer res.Body.Close()
@@ -74,10 +85,10 @@ func (cl *StooqClient) GetStock(queryParams url.Values) (domain.Stock, error) {
 		body, err := ioutil.ReadAll(res.Body)
 
 		if err != nil {
-			return domain.Stock{}, err
+			return StooqStock{}, err
 		}
 
-		var stocks []domain.Stock
+		var stocks []StooqStock
 		err = gocsv.UnmarshalBytes(body, &stocks)
 
 		return stocks[0], err
@@ -85,16 +96,16 @@ func (cl *StooqClient) GetStock(queryParams url.Values) (domain.Stock, error) {
 	case 400, 401, 403, 500:
 		var errRes ErrorResponse
 		if err := json.NewDecoder(res.Body).Decode(&errRes); err != nil {
-			return domain.Stock{}, err
+			return StooqStock{}, err
 		}
 
 		if errRes.StatusCode == 0 {
 			errRes.StatusCode = res.StatusCode
 		}
-		return domain.Stock{}, &errRes
+		return StooqStock{}, &errRes
 
 	default:
-		return domain.Stock{}, fmt.Errorf("unexpected status code %d", res.StatusCode)
+		return StooqStock{}, fmt.Errorf("unexpected status code %d", res.StatusCode)
 	}
 
 }
