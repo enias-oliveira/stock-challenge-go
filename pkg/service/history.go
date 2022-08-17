@@ -25,6 +25,6 @@ func (hs *HistoryService) FindAccountStockHistory(userID int) ([]domain.StockQuo
 	return hs.repo.FindByUserID(userID)
 }
 
-func (hs *HistoryService) FindMostRquestedStock() ([]domain.MostRequestedStockResult, error) {
+func (hs *HistoryService) FindMostRquestedStock() ([]srvcInterface.MostRequestedStockResult, error) {
 	return hs.repo.GetMostRequestedStocks()
 }

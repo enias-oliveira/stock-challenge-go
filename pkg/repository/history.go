@@ -4,6 +4,7 @@ import (
 	"stock-challenge-go/pkg/domain"
 
 	repoInterface "stock-challenge-go/pkg/repository/interface"
+	srvcInterface "stock-challenge-go/pkg/service/interface"
 
 	"gorm.io/gorm"
 )
@@ -29,8 +30,8 @@ func (hr *historyRepository) FindByUserID(userID int) ([]domain.StockQuoteReques
 	return sqReq, err
 }
 
-func (hr *historyRepository) GetMostRequestedStocks() ([]domain.MostRequestedStockResult, error) {
-	var mostRequestedStockResults []domain.MostRequestedStockResult
+func (hr *historyRepository) GetMostRequestedStocks() ([]srvcInterface.MostRequestedStockResult, error) {
+	var mostRequestedStockResults []srvcInterface.MostRequestedStockResult
 	err := hr.db.Model(&domain.StockQuoteRequest{}).Select("symbol as stock, count(*) as times_requested").Group("stock").Order("times_requested desc").Limit(5).Find(&mostRequestedStockResults).Error
 
 	return mostRequestedStockResults, err

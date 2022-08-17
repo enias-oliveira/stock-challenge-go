@@ -15,11 +15,6 @@ type Stock struct {
 	Name   string  `csv:"Name"`
 }
 
-type MostRequestedStockResult struct {
-	Stock          string `json:"stock"`
-	TimesRequested int    `json:"times_requested"`
-}
-
 type StockQuoteRequest struct {
 	gorm.Model
 	UserID int     `gorm:"type:int"`
