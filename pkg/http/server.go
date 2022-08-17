@@ -29,7 +29,7 @@ func NewServerHTTP(accountHandler *handler.AccountHandler, stockHandler *handler
 
 	api.GET("/profile", accountHandler.Profile)
 	api.GET("/stock", stockHandler.GetStock)
-	api.Use(middleware.RoleGuardMiddleware).GET("history", historyHandler.GetHistory)
+	api.GET("history", historyHandler.GetHistory)
 
 	return &ServerHTTP{engine: engine}
 }
