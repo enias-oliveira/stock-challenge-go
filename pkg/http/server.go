@@ -23,6 +23,8 @@ func NewServerHTTP(accountHandler *handler.AccountHandler) *ServerHTTP {
 
 	engine.POST("/register", accountHandler.Register)
 
+	engine.POST("/login", accountHandler.Login)
+
 	return &ServerHTTP{engine: engine}
 }
 

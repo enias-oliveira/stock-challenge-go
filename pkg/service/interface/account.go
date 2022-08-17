@@ -8,4 +8,5 @@ import (
 
 type AccountService interface {
 	Register(ctx context.Context, account domain.Account) (domain.Account, error)
+	ValidateAccount(ctx context.Context, account domain.Account) (domain.Account, error)
 }

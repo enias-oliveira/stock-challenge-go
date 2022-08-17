@@ -13,7 +13,7 @@ import (
 
 func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 	log.Println("Connecting to database")
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
 
 	log.Printf("DSN: %s", dsn)
 

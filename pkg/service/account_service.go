@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 	"crypto/sha256"
+	"errors"
+	"reflect"
 
 	"stock-challenge-go/pkg/domain"
 
@@ -22,7 +24,7 @@ func NewAccountService(repo repoInterface.AccountRepository) srvcInterface.Accou
 	}
 }
 
-func (s *AccountService) Register(ctx context.Context, account domain.Account) (domain.Account, error) {
+func (as *AccountService) Register(ctx context.Context, account domain.Account) (domain.Account, error) {
 	newPassword, gpErr := password.Generate(32, 4, 4, false, false)
 
 	account.Password = newPassword
@@ -34,11 +36,28 @@ func (s *AccountService) Register(ctx context.Context, account domain.Account) (
 	hashedPassword := sha256.Sum256([]byte(newPassword))
 	account.PasswordHash = hashedPassword[:]
 
-	account, cuErr := s.accRepo.Save(ctx, account)
+	account, cuErr := as.accRepo.Save(ctx, account)
 
 	if cuErr != nil {
 		return account, cuErr
 	}
 
 	return account, nil
+}
+
+func (as *AccountService) ValidateAccount(ctx context.Context, unvalAccount domain.Account) (domain.Account, error) {
+	accFound, err := as.accRepo.FindByEmail(ctx, unvalAccount.Email)
+
+	if err != nil {
+		return accFound, errors.New("Invalid username or password")
+	}
+
+	hashedPassword := sha256.Sum256([]byte(unvalAccount.Password))
+	isPasswordValid := reflect.DeepEqual(hashedPassword[:], accFound.PasswordHash)
+
+	if !isPasswordValid {
+		return accFound, errors.New("Invalid username or password")
+	}
+
+	return accFound, nil
 }
