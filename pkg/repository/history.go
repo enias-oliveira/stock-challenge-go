@@ -28,3 +28,10 @@ func (hr *historyRepository) FindByUserID(userID int) ([]domain.StockQuoteReques
 
 	return sqReq, err
 }
+
+func (hr *historyRepository) GetMostRequestedStocks() ([]domain.MostRequestedStockResult, error) {
+	var mostRequestedStockResults []domain.MostRequestedStockResult
+	err := hr.db.Model(&domain.StockQuoteRequest{}).Select("symbol as stock, count(*) as times_requested").Group("stock").Order("times_requested desc").Limit(5).Find(&mostRequestedStockResults).Error
+
+	return mostRequestedStockResults, err
+}

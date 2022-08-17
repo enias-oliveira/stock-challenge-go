@@ -29,7 +29,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	stooqClient := client.NewStooqClient(cfg)
 	stockRepository := repository.NewStockRepository(stooqClient)
 	historyRepository := repository.NewHistoryRepository(gormDB)
-	historyService := services.NewHistoryService(historyRepository, gormDB)
+	historyService := services.NewHistoryService(historyRepository)
 	stockService := services.NewStockService(stockRepository, historyService)
 	stockHandler := handler.NewStockHandler(stockService)
 	historyHandler := handler.NewHistoryHandler(historyService)
