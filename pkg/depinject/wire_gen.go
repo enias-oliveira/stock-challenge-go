@@ -28,7 +28,8 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	accountHandler := handler.NewAccountHandler(accountService)
 	stooqClient := client.NewStooqClient(cfg)
 	stockRepository := repository.NewStockRepository(stooqClient)
-	stockService := services.NewStockService(stockRepository)
+	historyService := services.NewHistoryService(gormDB)
+	stockService := services.NewStockService(stockRepository, historyService)
 	stockHandler := handler.NewStockHandler(stockService)
 	serverHTTP := http.NewServerHTTP(accountHandler, stockHandler)
 	return serverHTTP, nil

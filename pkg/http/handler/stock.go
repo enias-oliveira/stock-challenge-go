@@ -27,5 +27,13 @@ func (h *StockHandler) GetStock(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, stock)
+	c.JSON(200, gin.H{
+		"date":   stock.CreatedAt.UTC(),
+		"name":   stock.Name,
+		"symbol": stock.Symbol,
+		"open":   stock.Open,
+		"high":   stock.High,
+		"low":    stock.Low,
+		"close":  stock.Close,
+	})
 }

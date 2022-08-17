@@ -24,6 +24,7 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 	}
 
 	db.AutoMigrate(&domain.Account{})
+	db.AutoMigrate(&domain.StockQuoteRequest{})
 
 	return db, nil
 }

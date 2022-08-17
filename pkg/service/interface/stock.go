@@ -5,5 +5,5 @@ import (
 )
 
 type StockService interface {
-	GetStock(symbol string) (domain.Stock, error)
+	GetStock(symbol string) (domain.StockQuoteRequest, error)
 }

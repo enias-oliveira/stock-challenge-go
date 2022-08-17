@@ -22,6 +22,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		client.NewStooqClient,
 		service.NewAccountService,
 		service.NewStockService,
+		service.NewHistoryService,
 		handler.NewAccountHandler,
 		handler.NewStockHandler,
 		http.NewServerHTTP)
