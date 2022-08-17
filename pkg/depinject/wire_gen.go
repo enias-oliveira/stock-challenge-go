@@ -25,6 +25,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	accountRepository := repository.NewAccountRepository(gormDB)
 	accountService := services.NewAccountService(accountRepository)
 	accountHandler := handler.NewAccountHandler(accountService)
-	serverHTTP := http.NewServerHTTP(accountHandler)
+	stockHandler := handler.NewStockHandler()
+	serverHTTP := http.NewServerHTTP(accountHandler, stockHandler)
 	return serverHTTP, nil
 }
