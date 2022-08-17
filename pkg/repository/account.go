@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"log"
 
 	"gorm.io/gorm"
 
@@ -28,9 +27,6 @@ func (ar *accountRepository) FindByEmail(ctx context.Context, email string) (dom
 	account := domain.Account{
 		Email: email,
 	}
-
-	log.Printf("account: %+v", account)
-
 	err := ar.db.Where(&account, "email").Find(&account).Error
 
 	return account, err

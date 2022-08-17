@@ -1,17 +1,27 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"stock-challenge-go/pkg/domain"
 	srvcInterface "stock-challenge-go/pkg/service/interface"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v4"
 )
 
+// TODO: add payload validation
+
 type AccountHandler struct {
 	accountService srvcInterface.AccountService
+}
+
+type AccountClaims struct {
+	Role  string `json:"role"`
+	Email string `json:"email"`
+	jwt.RegisteredClaims
 }
 
 func NewAccountHandler(accountService srvcInterface.AccountService) *AccountHandler {
@@ -63,11 +73,13 @@ func (ah *AccountHandler) Login(c *gin.Context) {
 		return
 	}
 
-	claims := jwt.MapClaims{
-		"email": validAcc.Email,
-		"role":  validAcc.Role,
-		"id":    validAcc.ID,
-		"exp":   time.Now().Add(time.Hour * 72).Unix(),
+	claims := AccountClaims{
+		Role:  validAcc.Role,
+		Email: validAcc.Email,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
+			Subject:   fmt.Sprintf("%d", validAcc.ID),
+		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -82,5 +94,33 @@ func (ah *AccountHandler) Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"access_token": tokenString,
+	})
+}
+
+func (ah *AccountHandler) Profile(c *gin.Context) {
+	user, userExists := c.Get("user")
+
+	if !userExists {
+		c.JSON(500, gin.H{
+			"message": "error",
+		})
+		return
+	}
+
+	claims := user.(*jwt.Token).Claims.(*AccountClaims)
+
+	id, err := strconv.Atoi(claims.Subject)
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "error",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"id":    id,
+		"email": claims.Email,
+		"role":  claims.Role,
 	})
 }

@@ -2,6 +2,7 @@ package http
 
 import (
 	"stock-challenge-go/pkg/http/handler"
+	"stock-challenge-go/pkg/http/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,6 +25,10 @@ func NewServerHTTP(accountHandler *handler.AccountHandler) *ServerHTTP {
 	engine.POST("/register", accountHandler.Register)
 
 	engine.POST("/login", accountHandler.Login)
+
+	api := engine.Group("/api", middleware.AuthorizationMiddleware)
+
+	api.GET("/profile", accountHandler.Profile)
 
 	return &ServerHTTP{engine: engine}
 }
