@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"stock-challenge-go/pkg/config"
 	"stock-challenge-go/pkg/domain"
 	srvcInterface "stock-challenge-go/pkg/service/interface"
 	"strconv"
@@ -13,9 +14,9 @@ import (
 )
 
 // TODO: add payload validation
-
 type AccountHandler struct {
 	accountService srvcInterface.AccountService
+	cfg            config.Config
 }
 
 type AccountClaims struct {
@@ -24,8 +25,8 @@ type AccountClaims struct {
 	jwt.RegisteredClaims
 }
 
-func NewAccountHandler(accountService srvcInterface.AccountService) *AccountHandler {
-	return &AccountHandler{accountService: accountService}
+func NewAccountHandler(accountService srvcInterface.AccountService, cfg config.Config) *AccountHandler {
+	return &AccountHandler{accountService, cfg}
 }
 
 func (ah *AccountHandler) Register(c *gin.Context) {
@@ -84,8 +85,7 @@ func (ah *AccountHandler) Login(c *gin.Context) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	// TODO: move secret to env variable
-	tokenString, tsErr := token.SignedString([]byte("secret"))
+	tokenString, tsErr := token.SignedString([]byte(ah.cfg.JWTSecret))
 
 	if tsErr != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

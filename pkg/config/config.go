@@ -14,11 +14,12 @@ type Config struct {
 	APIHost     string `mapstructure:"API_HOST"`
 	APIPort     string `mapstructure:"API_PORT"`
 	StooqAPIKey string `mapstructure:"STOOQ_API_KEY"`
+	JWTSecret   string `mapstructure:"JWT_SECRET"`
 }
 
 var envs = []string{
 	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD",
-	"API_HOST", "API_PORT", "STOOQ_API_KEY",
+	"API_HOST", "API_PORT", "STOOQ_API_KEY", "JWT_SECRET",
 }
 
 // TODO: Read from enviroment variables. (Currently only reading from .env file)

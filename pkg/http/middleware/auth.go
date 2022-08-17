@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v4"
+	"github.com/spf13/viper"
 )
 
 func AuthorizationMiddleware(c *gin.Context) {
@@ -31,7 +32,7 @@ func validateToken(accessToken string) (*jwt.Token, error) {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 		}
 
-		return []byte("secret"), nil
+		return []byte(viper.GetString("JWT_SECRET")), nil
 	})
 
 	return token, err
